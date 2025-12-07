@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from '../Authh/AuthContext'; // Kita panggil context di sini
 import logoImg from '../assets/images/Home-image.jpg';
 
 const navbarData = {
@@ -14,11 +15,26 @@ const navbarData = {
 };
 
 export const useNavbar = () => {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false); 
+  const [scrolled, setScrolled] = useState(false); 
+  const [showAuthModal, setShowAuthModal] = useState(false); 
+  const { user, logout } = useAuth(); 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const location = useLocation();
 
   const toggle = () => setOpen((prev) => !prev);
+  const openLoginModal = () => {
+    setOpen(false); 
+    setShowAuthModal(true);
+  };
+
+  const closeLoginModal = () => setShowAuthModal(false);
+  const handleLogout = () => {
+    logout();               
+    setDropdownOpen(false); 
+    setOpen(false);         
+  };
 
   useEffect(() => {
     const onResize = () => {
@@ -34,12 +50,17 @@ export const useNavbar = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return {
-    open,
-    setOpen,
-    toggle,
-    scrolled,
-    location,
-    navbarData
+    navbarData, user, location, open, setOpen, scrolled, showAuthModal, dropdownOpen, setDropdownOpen, dropdownRef, toggle, openLoginModal, closeLoginModal, handleLogout
   };
 };

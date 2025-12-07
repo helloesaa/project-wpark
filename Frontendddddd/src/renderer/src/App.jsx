@@ -9,19 +9,11 @@ import About from './pages/about';
 import Contact from './pages/contact';
 import Footer from './components/footer';
 
-const HalamanKosong = ({ nama }) => (
-  <div className="h-screen flex items-center justify-center text-3xl font-bold text-main">
-    Halaman {nama} Sedang Dibuat 🚧
-  </div>
-);
-
 function App() {
   return (
     <HashRouter>
       <div className="font-poppins bg-cream min-h-screen flex flex-col">
-        
         <Navbar />
-
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -31,9 +23,7 @@ function App() {
             <Route path="/kontak" element={<Contact />} />
           </Routes>
         </main>
-
         <Footer />
-        
       </div>
     </HashRouter>
   );
