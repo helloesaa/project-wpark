@@ -9,8 +9,11 @@ import About from './pages/about';
 import Contact from './pages/contact';
 import Footer from './components/footer';
 
+<<<<<<< HEAD:frontend/src/renderer/src/App.jsx
 import { getTestFromBackend } from './api';
 
+=======
+>>>>>>> ad321bbe2b174df334999f6ab92e36d18a2e4564:Frontendddddd/src/renderer/src/App.jsx
 function App() {
   const [backendMsg, setBackendMsg] = useState('');
   const [backendError, setBackendError] = useState('');
@@ -33,7 +36,6 @@ function App() {
     <HashRouter>
       <div className="font-poppins bg-cream min-h-screen flex flex-col">
         <Navbar />
-
         <main className="flex-grow">
           <Routes>
             <Route
@@ -46,7 +48,6 @@ function App() {
             <Route path="/kontak" element={<Contact />} />
           </Routes>
         </main>
-
         <Footer />
       </div>
     </HashRouter>
