@@ -1,22 +1,29 @@
-const fastify = require('fastify')({ logger: true });
-const cors = require('@fastify/cors');
+const fastify = require('fastify')({ logger: true })
+const cors = require('@fastify/cors')
 
-fastify.register(cors, {
-    origin: true,
-});
+async function buildServer() {
+    const app = fastify
 
-// Register routes
-fastify.register(require('./routes'));
+    await app.register(cors, {
+        origin: '*',
+    })
 
-// Start server
-const start = async () => {
+    // ⬇️ ini yang penting
+    app.register(require('./routes'))
+
+    return app
+}
+
+async function start() {
+    const app = await buildServer()
+
     try {
-        await fastify.listen({ port: 3000, host: '0.0.0.0' });
-        console.log('Fastify server running on http://localhost:3000');
+        await app.listen({ port: 4000, host: '0.0.0.0' })
+        console.log('Backend jalan di http://localhost:4000')
     } catch (err) {
-        fastify.log.error(err);
-        process.exit(1);
+        app.log.error(err)
+        process.exit(1)
     }
-};
+}
 
-start();
+start()
