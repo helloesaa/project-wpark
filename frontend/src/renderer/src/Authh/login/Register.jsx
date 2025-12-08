@@ -1,73 +1,120 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { authService } from "../Auth-Service";
 
 const RegisterForm = ({ onSwitch, onClose }) => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
   const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setMessage("");
+    setIsError(false);
 
-    console.log("Data Register:", formData);
-    
-    setTimeout(() => {
-        alert("Tinggal masukin endpoint bg");
-        setIsLoading(false);
-    }, 1000);
+    const res = await authService.register(
+      formData.name,
+      formData.email,
+      formData.password
+    );
+
+    if (res.success) {
+      setMessage("Registrasi berhasil, silakan login.");
+      setFormData({ name: "", email: "", password: "" });
+
+      // kalau mau auto-switch ke login:
+      if (onSwitch) onSwitch();
+    } else {
+      setIsError(true);
+      setMessage(res.message || "Registrasi gagal");
+    }
+
+    setIsLoading(false);
   };
 
   return (
     <div>
       <div className="mb-6 text-center">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">Buat Akun</h2>
+        {message && (
+          <div
+            className={`mt-2 text-sm py-2 px-4 rounded-lg border ${isError
+                ? "bg-red-50 text-red-600 border-red-200"
+                : "bg-emerald-50 text-emerald-600 border-emerald-200"
+              }`}
+          >
+            {message}
+          </div>
+        )}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="text-sm font-medium text-gray-700">Nama Lengkap</label>
-          <input 
-            type="text" 
+          <label className="text-sm font-medium text-gray-700">
+            Nama Lengkap
+          </label>
+          <input
+            type="text"
             required
             className="w-full p-3 rounded-xl border border-gray-200 focus:border-main focus:outline-none mt-1"
             placeholder="Nama Anda"
-            onChange={(e) => setFormData({...formData, name: e.target.value})}
+            value={formData.name}
+            onChange={(e) =>
+              setFormData({ ...formData, name: e.target.value })
+            }
           />
         </div>
 
         <div>
           <label className="text-sm font-medium text-gray-700">Email</label>
-          <input 
-            type="email" 
+          <input
+            type="email"
             required
             className="w-full p-3 rounded-xl border border-gray-200 focus:border-main focus:outline-none mt-1"
             placeholder="email@contoh.com"
-            onChange={(e) => setFormData({...formData, email: e.target.value})}
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
           />
         </div>
 
         <div>
           <label className="text-sm font-medium text-gray-700">Password</label>
-          <input 
-            type="password" 
+          <input
+            type="password"
             required
             className="w-full p-3 rounded-xl border border-gray-200 focus:border-main focus:outline-none mt-1"
             placeholder="••••••••"
-            onChange={(e) => setFormData({...formData, password: e.target.value})}
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
           />
         </div>
 
-        <button 
+        <button
           type="submit"
           disabled={isLoading}
           className={`w-full bg-main text-white font-semibold py-3 rounded-xl shadow-lg transition-all 
-            ${isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-main-dark active:scale-95'}
+            ${isLoading
+              ? "opacity-70 cursor-not-allowed"
+              : "hover:bg-main-dark active:scale-95"
+            }
           `}
         >
           {isLoading ? (
-             <span className="flex items-center justify-center gap-2">
-                <i className='bx bx-loader-alt animate-spin'></i> Memproses...
-             </span>
-          ) : 'Daftar'}
+            <span className="flex items-center justify-center gap-2">
+              <i className="bx bx-loader-alt animate-spin"></i> Memproses...
+            </span>
+          ) : (
+            "Daftar"
+          )}
         </button>
       </form>
 

@@ -1,29 +1,38 @@
-const fastify = require('fastify')({ logger: true })
-const cors = require('@fastify/cors')
+// src/server.js
+const fastify = require("fastify")({ logger: true });
+const cors = require("@fastify/cors"); // ← hanya ini!
+const dotenv = require("dotenv");
+const authRoutes = require("./routes/auth");
 
-async function buildServer() {
-    const app = fastify
+dotenv.config();
 
-    await app.register(cors, {
-        origin: '*',
-    })
+// register CORS
+fastify.register(cors, {
+    origin: "*", // sementara allow semua
+});
 
-    // ⬇️ ini yang penting
-    app.register(require('./routes'))
+// register routes
+fastify.register(authRoutes);
 
-    return app
-}
+//route
+fastify.get("/", async (request, reply) => {
+    return { status: "ok", message: "W-PARK backend running" };
+});
 
-async function start() {
-    const app = await buildServer()
+const PORT = Number(process.env.PORT) || 5000;
 
+const start = async () => {
     try {
-        await app.listen({ port: 4000, host: '0.0.0.0' })
-        console.log('Backend jalan di http://localhost:4000')
-    } catch (err) {
-        app.log.error(err)
-        process.exit(1)
-    }
-}
+        const address = await fastify.listen({
+            port: PORT,
+            host: "0.0.0.0",
+        });
 
-start()
+        console.log(`🚀 Server running at ${address}`);
+    } catch (err) {
+        fastify.log.error(err);
+        process.exit(1);
+    }
+};
+
+start();

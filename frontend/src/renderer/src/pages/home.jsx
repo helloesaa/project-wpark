@@ -30,23 +30,6 @@ const Home = ({ backendMsg, backendError }) => {
           </span>
         </div>
 
-        {/* status backend kecil di bawah badge */}
-        <div className="mb-4 text-xs font-medium">
-          {backendError ? (
-            <span className="text-red-500">
-              Backend: {backendError}
-            </span>
-          ) : backendMsg ? (
-            <span className="text-emerald-600">
-              Backend OK: {backendMsg}
-            </span>
-          ) : (
-            <span className="text-gray-500">
-              Menghubungkan ke backend...
-            </span>
-          )}
-        </div>
-
         <h1 className="text-5xl md:text-6xl font-bold text-dark-text mb-6">
           {heroContent.title.line1} <br />
           <span className="text-main">{heroContent.title.highlight}</span>
