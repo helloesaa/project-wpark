@@ -1,7 +1,8 @@
-module.exports = async function (fastify, opts) {
-    // route untuk frontend
-    fastify.get('/api/test-react', async () => {
-        return { msg: 'React/Electron bisa hit backend!' };
+// src/routes/index.js
+async function baseRoutes(fastify, opts) {
+    fastify.get("/api/health", async (request, reply) => {
+        return { status: "ok", app: "w-park-backend" };
     });
+}
 
-};
+module.exports = baseRoutes;
